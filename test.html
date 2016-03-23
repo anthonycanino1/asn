@@ -1,0 +1,344 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset="><link rel="stylesheet" href="style.css" type="text/css"></head><body>
+<table width="100%"><tr class="doc"><td>
+ Homework Assignment 1</br>
+<a href="http://www.cs.berkeley.edu/~adamc/itp/">Interactive Computer Theorem Proving</a></br>
+CS294-9, Fall 2006 UC Berkeley </td></tr></table>
+<code>
+</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+ Submit your solution file for this assignment #<a href="mailto:adamc@cs.berkeley.edu?subject=ICTP HW1">#by e-mail#</a># with the subject "ICTP HW1" by the start of class on September 7.  You should write your solutions entirely on your own, since that's the only way to develop the intuitions needed to do this kind of stuff!</br>
+</br>
+  OK, to start, grab #<a href="HW1.v">#the template source file#</a>#.</br>
+</br>
+  <i>Meta-note</i>: Since this is the first time we're offering a class like this, any feedback you can provide on this and future homework assignments would be very helpful.  If something is too hard or too easy, we'd love to hear about it in a comment in your solution file.  (Comments are the things bracketed between parentheses and stars.) </td></tr></table>
+<code>
+</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+ Some useful tactics </td></tr></table>
+<code>
+</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+ Here is some support code to help you build proofs using the same natural deduction terminology that we used in class.  It's safe to skip over these.</br>
+</br>
+  One potential gotcha that's important to remember: For tactics that take arguments, when one of the arguments contains spaces, enclose it in parentheses to avoid scary error messages. </td></tr></table>
+<code>
+</br>
+</br>
+Ltac elimer e := try exact e; let H := fresh "H" in (generalize e; intro H).</br>
+</br>
+Ltac true_i := elimer I.</br>
+</br>
+Ltac false_e Hfalse := destruct Hfalse.</br>
+</br>
+Ltac imp_i := intro.</br>
+Ltac imp_e Himp Hant := elimer (Himp Hant).</br>
+</br>
+Ltac and_i := split.</br>
+Ltac and_e1 Hand := elimer (proj1 Hand).</br>
+Ltac and_e2 Hand := elimer (proj2 Hand).</br>
+</br>
+Ltac or_i1 := left.</br>
+Ltac or_i2 := right.</br>
+Ltac or_e Hor := destruct Hor.</br>
+</br>
+Ltac not_i := intro.</br>
+Ltac not_e Hno Hyes := destruct (Hno Hyes).</br>
+</br>
+Ltac forall_i := intro.</br>
+Ltac forall_e Hall x := elimer (Hall x).</br>
+</br>
+Ltac exists_i x := exists x.</br>
+Ltac exists_e Hex := destruct Hex.</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+* Plus the predefined tactics [assumption], [assert], [reflexivity],</br>
+  and [rewrite] </td></tr></table>
+<code>
+</br>
+</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+* * Propositional Logic </td></tr></table>
+<code>
+</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+* We open a [Section], which is a mechanism for controlling the scoping of</br>
+   variables and assumptions.</br>
+  </td></tr></table>
+<code>
+</br>
+Section propositional.</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* We want to prove some theorems about arbitary propositions, so we declare</br>
+    three propositional variables, scoped within this [Section] only. </td></tr></table>
+<code>
+</br>
+  Variables P Q R : Prop.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* OK, here's where the interactive part starts.  Prove these simple theorems</br>
+    in propositional logic.  Use a natural deduction style, by way of the tactics</br>
+    defined in the beginning of this source file.  They're the same that we used</br>
+    in class.  Coq has lots of other tactics available, but we'll consider them</br>
+    off-limits just for this assignment.</br>
+</br>
+    Each problem is given in the form:</br>
+[Theorem name : formula.</br>
+Admitted.]</br>
+</br>
+    This essentially states the theorem as an axiom.  Your job is to make it a</br>
+    bonafide theorem by replacing [Admitted] with a proof script and [Qed], as</br>
+    in this example:</br>
+  </td></tr></table>
+<code>
+</br>
+</br>
+  Theorem grand_challenge_problem : P -> P.</br>
+    imp_i.</br>
+    assumption.</br>
+  Qed.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Truth is true. </td></tr></table>
+<code>
+</br>
+  Theorem truth : True.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* False implies anything </td></tr></table>
+<code>
+</br>
+  Theorem contradiction_P : False -> P.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* [/\] is associative. </td></tr></table>
+<code>
+</br>
+  Theorem and_associates : (P /\ Q) /\ R -> P /\ (Q /\ R).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Dropping conjuncts preserves truth. </td></tr></table>
+<code>
+</br>
+  Theorem cut_out_the_middle_man : P /\ Q /\ R -> P /\ R.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* One or the other is true!  Can you figure out which? </td></tr></table>
+<code>
+</br>
+  Theorem make_up_your_mind : True \/ False.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* [\/] is commutative. </td></tr></table>
+<code>
+</br>
+  Theorem or_commutes : P \/ Q -> Q \/ P.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* [\/] is associative. </td></tr></table>
+<code>
+</br>
+  Theorem or_associates : (P \/ Q) \/ R -> P \/ (Q \/ R).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Something is fishy about the hypotheses, so we can deduce anything. </td></tr></table>
+<code>
+</br>
+  Theorem something_fishy : (P -> Q) -> P -> ~Q -> R.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* The law of contraposition holds only in this direction in constructive</br>
+    logic. </td></tr></table>
+<code>
+</br>
+  Theorem contrapositive : (P -> Q) -> ~Q -> ~P.</br>
+  Admitted.</br>
+End propositional.</br>
+</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+* * First-order logic </td></tr></table>
+<code>
+</br>
+</br>
+Section firstorder.</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* We'll prove some theorems that draw their individuals an</br>
+    unspecified set [A]. </td></tr></table>
+<code>
+</br>
+  Variable A : Set.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Here's an arbitrary individual in [A]. </td></tr></table>
+<code>
+</br>
+  Variable e : A.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Here's a unary function symbol. </td></tr></table>
+<code>
+</br>
+  Variable f : A -> A.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Here are two unary predicate symbols. </td></tr></table>
+<code>
+</br>
+  Variables P P' : A -> Prop.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Here's a binary predicate symbol. </td></tr></table>
+<code>
+</br>
+  Variable Q : A -> A -> Prop.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Prove the following theorems using only the natural deduction tactics</br>
+    introduced in class: </td></tr></table>
+<code>
+</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* If [P] holds for any value, then it must hold for [f e]. </td></tr></table>
+<code>
+</br>
+  Theorem indeed : (forall x : A, P x) -> P (f e).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* If [P] holds for anything [f] returns, then [P] holds of something. </td></tr></table>
+<code>
+</br>
+  Theorem ofcourse : (forall x : A, P (f x)) -> (exists y : A, P y).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* Swapping [exists] and [forall] in this way is always legal. </td></tr></table>
+<code>
+</br>
+  Theorem swap_quantifiers :</br>
+    (exists x : A, forall y : A, Q x y)</br>
+    -> (forall y : A, exists x : A, Q x y).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* If [P] maps everything to false, then we can't find anything it maps to</br>
+    true. </td></tr></table>
+<code>
+</br>
+  Theorem nobody :</br>
+    (forall x : A, ~(P x))</br>
+    -> ~(exists x : A, P x).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* We can push a conjunction inside universal quantifications. </td></tr></table>
+<code>
+</br>
+  Theorem coalesce1 : (forall x : A, P x) /\ (forall x : A, P' x)</br>
+    -> (forall x : A, P x /\ P' x).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* We can push a universal quantification inside a conjunction. </td></tr></table>
+<code>
+</br>
+  Theorem coalesce2 : (forall x : A, P x /\ P' x)</br>
+    -> (forall x : A, P x) /\ (forall x : A, P' x).</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* This one doesn't have any deeper meaning. :-) </td></tr></table>
+<code>
+</br>
+  Theorem one_or_the_other :</br>
+    (forall x : A, P x -> P' e)</br>
+    -> ((forall y : A, P' y) \/ (exists z : A, P z))</br>
+    -> P' e.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* A straightforward fact about equality and functions </td></tr></table>
+<code>
+</br>
+  Theorem reverse_congruence : forall x : A, forall y : A,</br>
+    x = y -> f y = f x.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* If the set [A] has only one member, then we can derive a particular</br>
+    equality. </td></tr></table>
+<code>
+</br>
+  Theorem small_world : (exists x : A, forall y : A, x = y)</br>
+    -> e = f e.</br>
+  Admitted.</br>
+</br>
+  </code>
+<table width="100%"><tr class="doc"><td>
+* A complicated theorem about equality and functions </td></tr></table>
+<code>
+</br>
+  Theorem nasty : forall x : A, forall y : A, forall z : A,</br>
+    f (f x) = x</br>
+    -> f z = f x</br>
+    -> f y = f z</br>
+    -> f (f (f (f (f x)))) = f y.</br>
+  Admitted.</br>
+End firstorder.</br>
+</br>
+</code>
+<table width="100%"><tr class="doc"><td>
+* When you're done, you'll know that your solutions are all correct if there</br>
+  are no more occurrences of [Admitted] and you haven't erased any of the</br>
+  [Theorem] lines that were in the template file.</br>
+  </td></tr></table>
+<code>
+</br>
+</body></html>
